@@ -2,9 +2,12 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.*;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -24,23 +27,27 @@ public class QueueSystem {
 	private int size;
 	QueueSystem queue;
 	
-	QueueSystem(){
-		size = 0;
-		start = null;	
-	}
-	
 	protected JFrame initialFrame;
 	protected JFrame adding;
 	private JFrame sessionP;
+	
 	private JButton add;
 	private JButton remove;
 	private JButton pause;
 	private JButton unpause;
 	private JButton submit;
 	private JButton submitP;
+	
 	private JPanel panel;
 	private JPanel paneli;
 	private JPanel panels;
+	
+	private JList<String> queueList;
+	
+	QueueSystem(){
+		size = 0;
+		start = null;	
+	}
 	
 	public void addToQueue(String n,String e, String p){
 		int email_exists=0;
@@ -92,10 +99,39 @@ public class QueueSystem {
 		}
 	}
 	
+	public ArrayList<String> populateArray() {
+		ArrayList<String> arr = new ArrayList<String>();
+		
+		if(start != null) {
+			arr.add(start.name);
+			while(start.next!=null) {
+				start = start.next;
+				arr.add(start.name);
+			}
+			while(start.pre !=null) {
+				start=start.pre;
+			}
+		}
+		
+		return arr;
+	}
+	
+	@SuppressWarnings("unchecked")
 	public void initialWindow() {
 		queue = new QueueSystem();
+		queue.addToQueue("Ethiraj", "ethi@gmail.com", "word2");
+		queue.addToQueue("Jammy", "jammy@gmail.com", "pass1");
+		queue.addToQueue("Vamsi", "vamsi@gmail.com", "pass");
+		queue.addToQueue("Aditi", "aditi@gmail.com", "word");
 		initialFrame = new JFrame();
 		initialFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		JLabel title = new JLabel("List of wait till TA:");
+		ArrayList<String> arr = queue.populateArray();
+	    Object[] objArr = arr.toArray(); 
+	    String[] str = Arrays.copyOf(objArr, objArr.length, String[].class);
+	    queueList = new JList(str);
+	    queueList.setVisibleRowCount(1);
+		
 		add = new JButton();
 		remove = new JButton();
 		pause = new JButton();
@@ -256,6 +292,10 @@ public class QueueSystem {
 		panel.add(pause);
 		unpause.setBounds(375, 350, 125, 100);
 		panel.add(unpause);
+		title.setBounds(0, 0, 400, 100);
+		panel.add(title);
+		queueList.setBounds(50,100,240,150);
+		panel.add(queueList);
 		initialFrame.add(panel);
 		panel.setLocation(0,0);
 		
