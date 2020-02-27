@@ -20,15 +20,20 @@ public class RemoveListener implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		System.out.println("Remove pressed for"+(String) list.getSelectedValue());
+		
+		if (list.getSelectedValue() != null) {
+		
 		String value = JOptionPane.showInputDialog(null, "Enter Session Password");
-		if (value != null) {
 		QueueSystem.removeElement(queue,value);
-		}
 		DefaultListModel model = (DefaultListModel) list.getModel();
 		int selectedIndex = list.getSelectedIndex();
 		if (selectedIndex != -1) {
 		    model.remove(selectedIndex);
 		}
+		}else {
+			JOptionPane.showInternalMessageDialog(null, "Select your name");
+		}
+		
 	}
 	
 }
