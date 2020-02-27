@@ -4,6 +4,4 @@ public class ListNode {
 		String email;
 		String password;
 		String status;
-		ListNode pre;
-		ListNode next;
 }

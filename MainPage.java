@@ -47,24 +47,15 @@ public class MainPage extends JFrame{
 		
 		QueueSystem queue=QueueSystem.initQueue();
 		DefaultListModel dlm1=new DefaultListModel();
-		queueList.setModel(dlm1);
-		
-		ListNode node=queue.start;
-		
-		while (node != null) {
-			System.out.println(node.name);
-			dlm1.addElement(node.name);
-			node=node.next;
+		queueList.setModel(dlm1);		
+		for(String name : queue.getUserNames()) {
+			dlm1.addElement(name);
 		}
-		
-		
-		
+	
 		add(BorderLayout.CENTER, queueList);
 		
 		JList myList2 = new JList();
 		
-		
-
 		// Finally, create the button component.
 		JButton button = new JButton("Add a student");
 		buttonPanel=new JPanel();
@@ -74,14 +65,16 @@ public class MainPage extends JFrame{
 		
 		remove = new JButton("Remove");
 		ActionListener removeControl = new RemoveListener(queueList,queue);
+		AddListener addControl = new AddListener(queueList,queue);
 		remove.addActionListener(removeControl);
-		
+		add.addActionListener(addControl);
 		buttonPanel.add(add);
 		buttonPanel.add(pause);
 		buttonPanel.add(unpause);
 		buttonPanel.add(remove);
 		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 		add(buttonPanel, BorderLayout.SOUTH);
+        
 	}
 
 	
@@ -240,7 +233,7 @@ public class MainPage extends JFrame{
 	}*/
 
 	public static void main(String[] args) {
-		adjustFontSize(30); // Only needed to scale the font for lectures
+		adjustFontSize(15); // Only needed to scale the font for lectures
 
 		MainPage window = new MainPage();
 
@@ -249,7 +242,7 @@ public class MainPage extends JFrame{
 		
 		window.setSize(700, 500);
 		window.setVisible(true);
-		
+		window.setLocationRelativeTo(null);
 		
 		
 		

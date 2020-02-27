@@ -22,7 +22,7 @@ public class RemoveListener implements ActionListener {
 		System.out.println("Remove pressed for"+(String) list.getSelectedValue());
 		String value = JOptionPane.showInputDialog(null, "Enter Session Password");
 		if (value != null) {
-		QueueSystem.removeElement(queue,value);
+		int del = QueueSystem.removeElement(queue,(String) list.getSelectedValue());
 		}
 		DefaultListModel model = (DefaultListModel) list.getModel();
 		int selectedIndex = list.getSelectedIndex();
