@@ -24,27 +24,23 @@ public class RemoveListener implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		System.out.println("Remove pressed for"+table.getSelectedRow());
 		JTextField password = new JPasswordField();
 		Object[] message = {
 		    "Password:", password
 		};
+
+
+		if (table.getSelectedRow() < 0) {
+			JOptionPane.showMessageDialog(null, "Choose one to remove!");
+		} else {
+		
+		JPasswordField passwordField = new JPasswordField();
 		int option = JOptionPane.showConfirmDialog(null, message, "Enter Session Password", JOptionPane.OK_CANCEL_OPTION);
 		
 		if(option!=0) {return;}
 		
 		String value = password.getText();
-
-		if (table.getSelectedRow() < 0) {
-			JOptionPane.showMessageDialog(null, "Choose one to remove!");
-		} else if (table.getValueAt(table.getSelectedRow(), 1).toString().equals("Paused")) {
-			JOptionPane.showMessageDialog(null, "You are already paused!");
-		} else {
-		
-		JPasswordField passwordField = new JPasswordField();
-		if (value != null) {
-		int del = QueueSystem.removeElement(queue,table.getValueAt(table.getSelectedRow(), 0).toString());
-		}
+	
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
 		int selectedIndex = table.getSelectedRow();
 		if (selectedIndex != -1) {
