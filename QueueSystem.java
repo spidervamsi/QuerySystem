@@ -1,104 +1,96 @@
 import java.util.ArrayList;
+import java.util.LinkedList;
 
-import javax.swing.JOptionPane;
 
 public class QueueSystem {
 
-	public ListNode start;
-	private int size;
+	static LinkedList<ListNode> listNodes;
 	
 
 	QueueSystem() {
-		size = 0;
-		start = null;
+		listNodes = new LinkedList<ListNode>();
 	}
 
-	public void addToQueue(String n, String e, String p) {
-		int email_exists = 0;
+	public void addToQueue(String name, String email, String password) {
 		ListNode temp = new ListNode();
-		temp.name = n;
-		temp.email = e;
-		temp.password = p;
+		temp.name = name;
+		temp.email = email;
+		temp.password = password;
 		temp.status = "unpaused";
-		temp.next = null;
-		if (size == 0) {
-			start = temp;
-			start.pre = null;
-			start.next = null;
-		} else {
-			while (start.next != null) {
-				if (start.email.contentEquals(e)) {
-					email_exists = 1;
-				}
-				start = start.next;
-			}
-			if (start.email.contentEquals(e)) {
-				email_exists = 1;
-			}
-			if (email_exists == 0) {
-				temp.pre = start;
-				start.next = temp;
-			}
-			while (start.pre != null) {
-				start = start.pre;
-			}
-		}
-		if (email_exists == 1) {
-			JOptionPane.showMessageDialog(null, "email already exists");
-			email_exists = 0;
-		}
-		size++;
+		listNodes.add(temp);
 	}
 	
-	public ArrayList<String> populateArray() {
+	public ArrayList<String> getUserNames() {
 		ArrayList<String> arr = new ArrayList<String>();
-
-		if (start != null) {
-			arr.add(start.name);
-			while (start.next != null) {
-				start = start.next;
-				arr.add(start.name);
-			}
-			while (start.pre != null) {
-				start = start.pre;
-			}
+		for(ListNode node:listNodes) {
+			System.out.println(node.name);
+			arr.add(node.name);
 		}
-
+		return arr;
+	}
+	
+	public ArrayList<String> getUserEmails() {
+		ArrayList<String> arr = new ArrayList<String>();
+		for(ListNode node:listNodes) {
+			System.out.println(node.email);
+			arr.add(node.email);
+		}
 		return arr;
 	}
 	
 	public static int removeElement(QueueSystem q, String name) {
-		ListNode node=q.start;
-		while (node!=null) {
+		ListNode ele=null;
+		q.printQueue();
+		for(ListNode node: q.listNodes) {
 			if(node.name.toString().equals(name)) {
-				node.pre.next=node.next;
-				node.next.pre = node.pre;
+				ele = node;
 				break;
 			}
-			node=node.next;
-		}
+		}	
+		
+		if(listNodes.remove(ele)) {return 0;}
+		else {return -1;}	
+	}
+	
+	public static int pauseElement(QueueSystem q, String name) {
+		ListNode ele=null;
+		for(ListNode node: q.listNodes) {
+			if(node.name.toString().equals(name)) {
+				node.status="Paused";
+			}
+		}	
+		
+		return 0;	
+	}
+	
+	
+	public static int unpauseElement(QueueSystem q, String name) {
+		for(ListNode node: listNodes) {
+			if(node.name.toString().equals(name)) {
+				node.status="Active";
+			}
+		}	
 		
 		return 0;
-		
 	}
+	
+	
 	public void printQueue() {
-		int i = 0;
-		System.out.println(i + " " + start.name);
-		while (start.next != null) {
-			i++;
-			start = start.next;
-			System.out.println(i + " " + start.name);
-		}
-		while (start.pre != null) {
-			start = start.pre;
+		for(ListNode node:listNodes) {
+			System.out.println(node.name);
 		}
 	}
 	
+	
+	
 	public static QueueSystem initQueue() {
 		QueueSystem input = new QueueSystem();
-		input.addToQueue("Ethiraj", "Ethiraj", "ethiraj@b.com");
-		input.addToQueue("Vamsi       Paused", "Vamsi", "vamsi@b.com");
-		input.addToQueue("Aditi", "Vamsi", "Aditi@b.com");		
+		input.addToQueue("Ethiraj","ethiraj@b.com","Ethiraj");
+		input.addToQueue("Vamsi","vamsi@b.com","Youtube");
+		input.addToQueue("Aditi","Aditi@b.com", "Aditi");
+		input.addToQueue("Jimmy","jimmy@b.com", "Jimmy");
+		
+		input.printQueue();
 		
 		return input;
 		
