@@ -1,253 +1,121 @@
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
 
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.ListModel;
-import javax.swing.ListSelectionModel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 
-public class MainPage extends JFrame{
 
-	
+public class MainPage extends JFrame {
+
 	protected JFrame initialFrame;
 	protected JFrame adding;
-	private JFrame sessionP;
 
 	private JButton add;
 	private JButton remove;
 	private JButton pause;
 	private JButton unpause;
-	private JButton submit;
-	private JButton submitP;
-
-	private JPanel panel;
 	private JPanel buttonPanel;
-	private JList<String> queueList;
-	private JLabel title;
-	private JList<String>  myList;
 
-	
 	public MainPage() {
-		JLabel description = new JLabel("Who should be called on next: ");
-		add(BorderLayout.NORTH, description);
-		queueList = new JList();
-		
-		QueueSystem queue=QueueSystem.initQueue();
-		DefaultListModel dlm1=new DefaultListModel();
-		queueList.setModel(dlm1);		
-		for(String name : queue.getUserNames()) {
-			dlm1.addElement(name);
+		// Change
+		JLabel queueStatus = new JLabel("Next Student: ");
+
+		add(BorderLayout.NORTH, queueStatus);
+
+		// Hardcoded initial values
+		QueueSystem queue = QueueSystem.initQueue();
+		String[][] initNames = new String[5][2];
+
+		int i = 0;
+		for (String name : queue.getUserNames()) {
+			for (int j = 0; j < 2; j++) {
+				if (j == 0) {
+					initNames[i][j] = name;
+				} else {
+					initNames[i][j] = "Active";
+				}
+
+			}
+			i++;
 		}
-	
-		add(BorderLayout.CENTER, queueList);
+
+		String[] columnNames = { "Name", "Status" };
+		DefaultTableModel model = new DefaultTableModel(initNames, columnNames);
 		
-		JList myList2 = new JList();
+		JTable table = new JTable(model) {
+		       private static final long serialVersionUID = 1L;
+
+		        public boolean isCellEditable(int row, int column) {                
+		                return false;               
+		        };
+		};
+		JScrollPane scroll = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		table.setRowHeight(table.getFontMetrics(table.getFont()).getHeight() + 2);
+		table.setPreferredScrollableViewportSize(new Dimension(420, 250));
+		table.setFillsViewportHeight(true);
 		
-		// Finally, create the button component.
-		JButton button = new JButton("Add a student");
-		buttonPanel=new JPanel();
+		
+		Font font = new Font("Arial", Font.BOLD, 25);
+		JTableHeader tableHeader =table.getTableHeader();
+		tableHeader.setFont(font);
+		
+		JPanel tablePane = new JPanel();
+		tablePane.add(scroll);
+		add(BorderLayout.CENTER, tablePane);
+
+		buttonPanel = new JPanel();
+
 		add = new JButton("Add");
-		pause = new JButton("Pause");
-		unpause = new JButton("Unpause");
-		
-		remove = new JButton("Remove");
-		ActionListener removeControl = new RemoveListener(queueList,queue);
-		AddListener addControl = new AddListener(queueList,queue);
-		remove.addActionListener(removeControl);
+		AddListener addControl = new AddListener(table, queue,queueStatus);
 		add.addActionListener(addControl);
+
+		pause = new JButton("Pause");
+		ActionListener pauseControl = new PauseListener(table, queue);
+		pause.addActionListener(pauseControl);
+
+		unpause = new JButton("Unpause");
+		ActionListener unpauseControl = new UnpauseListener(table, queue);
+		unpause.addActionListener(unpauseControl);
+
+		remove = new JButton("Remove");
+		ActionListener removeControl = new RemoveListener(table, queue, queueStatus);
+		remove.addActionListener(removeControl);
+
 		buttonPanel.add(add);
 		buttonPanel.add(pause);
 		buttonPanel.add(unpause);
 		buttonPanel.add(remove);
+		
 		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 		add(buttonPanel, BorderLayout.SOUTH);
-        
+
 	}
 
-	
-
-	
-	@SuppressWarnings("unchecked")
-	/*public void initialWindow() {
-		
-		
-		initialFrame = new JFrame();
-		initialFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-
-		/*add.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				adding = new JFrame();
-				paneli = new JPanel();
-				adding.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				submit = new JButton();
-				submit.setText("submit");
-				JTextField nameT = new JTextField("name");
-				JTextField emailT = new JTextField("email");
-				submit.addActionListener(new ActionListener() {
-
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						String nameS = nameT.getText();
-						String emailS = emailT.getText();
-
-						sessionP = new JFrame();
-						panels = new JPanel();
-						sessionP.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-						submitP = new JButton();
-						submitP.setText("submit");
-						JTextField session_pass = new JTextField("session password");
-						submitP.addActionListener(new ActionListener() {
-							@Override
-							public void actionPerformed(ActionEvent e) {
-								String sessP = session_pass.getText();
-								queue.addToQueue(nameS, emailS, sessP);
-								queue.printQueue();
-							}
-						});
-						panels.setLayout(null);
-						submitP.setBounds(200, 200, 80, 50);
-						panels.add(submitP);
-						session_pass.setBounds(100, 150, 300, 50);
-						panels.add(session_pass);
-						sessionP.add(panels);
-						sessionP.setSize(500, 500);
-						sessionP.setVisible(true);
-
-					}
-				});
-				paneli.setLayout(null);
-				submit.setBounds(200, 250, 80, 50);
-				paneli.add(submit);
-				nameT.setBounds(100, 150, 300, 50);
-				paneli.add(nameT);
-				emailT.setBounds(100, 200, 300, 50);
-				paneli.add(emailT);
-				adding.add(paneli);
-				panel.setLocation(0, 0);
-				adding.setSize(500, 500);
-				adding.setVisible(true);
-			}
-		});
-
-		remove.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				System.out.println("###" + ((String) queueList.getSelectedValue()));
-				sessionP = new JFrame();
-				panels = new JPanel();
-				sessionP.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				submitP = new JButton();
-				submitP.setText("submit");
-				JTextField session_pass = new JTextField("session password");
-				submitP.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						String sessP = session_pass.getText();
-					}
-				});
-				panels.setLayout(null);
-				submitP.setBounds(200, 200, 80, 50);
-				panels.add(submitP);
-				session_pass.setBounds(100, 150, 300, 50);
-				panels.add(session_pass);
-				sessionP.add(panels);
-				sessionP.setSize(500, 500);
-				sessionP.setVisible(true);
-
-			}
-		});
-
-		pause.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				sessionP = new JFrame();
-				panels = new JPanel();
-				sessionP.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				submitP = new JButton();
-				submitP.setText("submit");
-				JTextField session_pass = new JTextField("session password");
-				submitP.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						String sessP = session_pass.getText();
-					}
-				});
-				panels.setLayout(null);
-				submitP.setBounds(200, 200, 80, 50);
-				panels.add(submitP);
-				session_pass.setBounds(100, 150, 300, 50);
-				panels.add(session_pass);
-				sessionP.add(panels);
-				sessionP.setSize(500, 500);
-				sessionP.setVisible(true);
-
-			}
-		});
-
-		unpause.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				sessionP = new JFrame();
-				panels = new JPanel();
-				sessionP.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				submitP = new JButton();
-				submitP.setText("submit");
-				JTextField session_pass = new JTextField("session password");
-				submitP.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						String sessP = session_pass.getText();
-					}
-				});
-				panels.setLayout(null);
-				submitP.setBounds(200, 200, 80, 50);
-				panels.add(submitP);
-				session_pass.setBounds(100, 150, 300, 50);
-				panels.add(session_pass);
-				sessionP.add(panels);
-				sessionP.setSize(500, 500);
-				sessionP.setVisible(true);
-
-			}
-		});
-
-		
-
-		initialFrame.setSize(500, 500);
-		initialFrame.setVisible(true);
-	}*/
-
 	public static void main(String[] args) {
-		adjustFontSize(15); // Only needed to scale the font for lectures
-
+		adjustFontSize(10); 
 		MainPage window = new MainPage();
-
-		// Finish setting up this window.
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
 		window.setSize(700, 500);
 		window.setVisible(true);
 		window.setLocationRelativeTo(null);
-		
-		
-		
+
 	}
-	
+
+	 /*@author Matthew Hertz
+	  * 
+	  */
 	public static void adjustFontSize(int adjustment) {
 
 		UIDefaults defaults = UIManager.getDefaults();

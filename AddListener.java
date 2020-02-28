@@ -2,21 +2,23 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-import javax.swing.DefaultListModel;
-import javax.swing.JFrame;
-import javax.swing.JList;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
 
 public class AddListener implements ActionListener {
 	
-	private JList<String> list;
+	private JTable table;
 	private QueueSystem queue;
+	private JLabel label;
 	
-	public AddListener(JList<String> iList,QueueSystem q) {
-		list=iList;
+	public AddListener(JTable iTable,QueueSystem q, JLabel empty) {
+		table=iTable;
 		queue=q;
+		label=empty;
 	}
 
 	@Override
@@ -26,12 +28,12 @@ public class AddListener implements ActionListener {
 		JTextField username = new JTextField();
 		JTextField email = new JTextField();
 		JTextField password = new JPasswordField();
-		JTextField rePassword = new JPasswordField();
+//		JTextField rePassword = new JPasswordField();
 		Object[] message = {
 		    "Username:", username,
 		    "Email Id:", email,
 		    "Password:", password,
-		    "Re-Enter Password:", rePassword,
+//		    "Re-Enter Password:", rePassword,
 		};
 		
 		int option = JOptionPane.showConfirmDialog(null, message, "CREATE ACCOUNT", JOptionPane.OK_CANCEL_OPTION);
@@ -40,13 +42,13 @@ public class AddListener implements ActionListener {
 		
 		if(option == 2 ) {return;}
 		if(username.getText().length()==0&&email.getText().length()==0) {return;}
-		if(username.getText().length()==0) {JOptionPane.showMessageDialog(null, "please enter a username");return;}
-		if(email.getText().length()==0) {JOptionPane.showMessageDialog(null, "please enter a email");return;}
-		if(password.getText().length()==0) {JOptionPane.showMessageDialog(null, "please enter a password");return;}
-		if(rePassword.getText().length()==0) {JOptionPane.showMessageDialog(null, "password doesn't match");return;}
+		if(username.getText().length()==0) {JOptionPane.showMessageDialog(null, "Please enter a username");return;}
+		if(email.getText().length()==0) {JOptionPane.showMessageDialog(null, "Please enter a email");return;}
+		if(password.getText().length()==0) {JOptionPane.showMessageDialog(null, "Please enter a password");return;}
+//		if(rePassword.getText().length()==0) {JOptionPane.showMessageDialog(null, "Password did not match");return;}
 		
-		ArrayList<String> usernames = queue.getUserNames();
-		if(usernames.contains(username.getText())) {JOptionPane.showMessageDialog(null, "username already exists");return;}
+//		ArrayList<String> usernames = queue.getUserNames();
+//		if(usernames.contains(username.getText())) {JOptionPane.showMessageDialog(null, "Username already exists");return;}
 		
 		ArrayList<String> useremail = queue.getUserEmails();
 		if(useremail.contains(email.getText())) {JOptionPane.showMessageDialog(null, "EamilId already exists");return;}
@@ -54,8 +56,12 @@ public class AddListener implements ActionListener {
 		
 			queue.addToQueue(username.getText(), email.getText(), password.getText());
 		
-		DefaultListModel model = (DefaultListModel) list.getModel();	
-		model.addElement(username.getText());
+		DefaultTableModel model = (DefaultTableModel) table.getModel();	
+		model.addRow(new Object[]{username.getText(),"Active"});
+		if(label.getText().equals("Queue is Empty")) {
+			label.setText("Next Student :");
+			table.setVisible(true);
+		}
 		
 	}
 

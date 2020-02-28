@@ -1,8 +1,6 @@
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.ListIterator;
 
-import javax.swing.JOptionPane;
 
 public class QueueSystem {
 
@@ -43,7 +41,7 @@ public class QueueSystem {
 	public static int removeElement(QueueSystem q, String name) {
 		ListNode ele=null;
 		q.printQueue();
-		for(ListNode node: listNodes) {
+		for(ListNode node: q.listNodes) {
 			if(node.name.toString().equals(name)) {
 				ele = node;
 				break;
@@ -54,6 +52,28 @@ public class QueueSystem {
 		else {return -1;}	
 	}
 	
+	public static int pauseElement(QueueSystem q, String name) {
+		ListNode ele=null;
+		for(ListNode node: q.listNodes) {
+			if(node.name.toString().equals(name)) {
+				node.status="Paused";
+			}
+		}	
+		
+		return 0;	
+	}
+	
+	
+	public static int unpauseElement(QueueSystem q, String name) {
+		for(ListNode node: listNodes) {
+			if(node.name.toString().equals(name)) {
+				node.status="Active";
+			}
+		}	
+		
+		return 0;
+	}
+	
 	
 	public void printQueue() {
 		for(ListNode node:listNodes) {
@@ -61,13 +81,17 @@ public class QueueSystem {
 		}
 	}
 	
+	
+	
 	public static QueueSystem initQueue() {
 		QueueSystem input = new QueueSystem();
-		input.addToQueue("Ethiraj", "Ethiraj", "ethiraj@b.com");
-		input.addToQueue("Vamsi       Paused", "Youtube", "vamsi@b.com");
-		input.addToQueue("Aditi", "Aditi", "Aditi@b.com");		
+		input.addToQueue("Rohit","rohit@b.com", "Rohit");
+		input.addToQueue("Ethiraj","ethiraj@b.com","Ethiraj");
+		input.addToQueue("Vamsi","vamsi@b.com","Youtube");
+		input.addToQueue("Aditi","Aditi@b.com", "Aditi");
+		input.addToQueue("Jimmy","jimmy@b.com", "Jimmy");
 		
-		input.printQueue();
+//		input.printQueue();
 		
 		return input;
 		
