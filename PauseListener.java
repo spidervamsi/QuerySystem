@@ -1,7 +1,9 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 public class PauseListener implements ActionListener {
@@ -24,8 +26,17 @@ public class PauseListener implements ActionListener {
 		} else if (table.getValueAt(table.getSelectedRow(), 1).toString().equals("Paused")) {
 			JOptionPane.showMessageDialog(null, "You are already paused!");
 		} else {
+			
+			JTextField password = new JPasswordField();
+			Object[] message = {
+			    "Password:", password
+			};
 
-			String value = JOptionPane.showInputDialog(null, "Enter Session Password");
+			int option = JOptionPane.showConfirmDialog(null, message, "Enter Session Password", JOptionPane.OK_CANCEL_OPTION);
+			
+			if(option!=0) {return;}
+			
+			String value = password.getText();
 			if (value != null) {
 				int del = QueueSystem.pauseElement(queue, table.getValueAt(table.getSelectedRow(), 0).toString());
 			}
