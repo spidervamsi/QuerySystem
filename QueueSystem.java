@@ -85,6 +85,7 @@ public class QueueSystem {
 	
 	public static QueueSystem initQueue() {
 		QueueSystem input = new QueueSystem();
+		input.addToQueue("Rohit","rohit@b.com", "Rohit");
 		input.addToQueue("Ethiraj","ethiraj@b.com","Ethiraj");
 		input.addToQueue("Vamsi","vamsi@b.com","Youtube");
 		input.addToQueue("Aditi","Aditi@b.com", "Aditi");
