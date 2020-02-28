@@ -29,13 +29,13 @@ public class MainPage extends JFrame {
 
 	public MainPage() {
 		// Change
-		JLabel description = new JLabel("Next Student: ");
+		JLabel queueStatus = new JLabel("Next Student: ");
 
-		add(BorderLayout.NORTH, description);
+		add(BorderLayout.NORTH, queueStatus);
 
 		// Hardcoded initial values
 		QueueSystem queue = QueueSystem.initQueue();
-		String[][] initNames = new String[4][2];
+		String[][] initNames = new String[5][2];
 
 		int i = 0;
 		for (String name : queue.getUserNames()) {
@@ -52,13 +52,20 @@ public class MainPage extends JFrame {
 
 		String[] columnNames = { "Name", "Status" };
 		DefaultTableModel model = new DefaultTableModel(initNames, columnNames);
-		JTable table = new JTable(model);
+		
+		JTable table = new JTable(model) {
+		       private static final long serialVersionUID = 1L;
 
+		        public boolean isCellEditable(int row, int column) {                
+		                return false;               
+		        };
+		};
 		JScrollPane scroll = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		table.setRowHeight(table.getFontMetrics(table.getFont()).getHeight() + 2);
 		table.setPreferredScrollableViewportSize(new Dimension(420, 250));
 		table.setFillsViewportHeight(true);
+		
 		
 		Font font = new Font("Arial", Font.BOLD, 25);
 		JTableHeader tableHeader =table.getTableHeader();
@@ -71,7 +78,7 @@ public class MainPage extends JFrame {
 		buttonPanel = new JPanel();
 
 		add = new JButton("Add");
-		AddListener addControl = new AddListener(table, queue,description);
+		AddListener addControl = new AddListener(table, queue,queueStatus);
 		add.addActionListener(addControl);
 
 		pause = new JButton("Pause");
@@ -83,7 +90,7 @@ public class MainPage extends JFrame {
 		unpause.addActionListener(unpauseControl);
 
 		remove = new JButton("Remove");
-		ActionListener removeControl = new RemoveListener(table, queue, description);
+		ActionListener removeControl = new RemoveListener(table, queue, queueStatus);
 		remove.addActionListener(removeControl);
 
 		buttonPanel.add(add);
